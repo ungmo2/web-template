@@ -1,0 +1,181 @@
+<!-- http://leaverou.github.io/stretchy/ -->
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>
+      <iframe src="logo.svg"></iframe>
+    </h1>
+    <div>
+      <p>Form element autosizing,
+        <br> the way it should be.</p>
+      <nav>
+        <ul>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#examples">Examples</a></li>
+          <li><a href="#usage">Usage</a></li>
+          <li><a href="stretchy.js" download="">Download</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <section id="features">
+    <h1>Features</h1>
+    <ul>
+      <li>
+        <strong>Handles multiple types of form controls</strong> Textareas? Inputs? Select menus? You name it!</li>
+      <li>
+        <strong>Tiny footprint</strong> Less than 1.5KB minified and gzipped!</li>
+      <li>
+        <strong>Automatically accounts for newly added controls</strong> via mutation observers, where supported</li>
+      <li>
+        <strong>Restrict form controls by a selector</strong> …or don’t and autosize all your form controls!</li>
+      <li>
+        <strong>Completely standalone</strong> no jQuery or other dependencies</li>
+      <li>
+        <strong>Plays well with existing HTML/CSS</strong> Follows placeholders, styling,
+        <code>min/max-width/height</code> constraints, transitions</li>
+      <li>
+        <strong>No JS knowledge required</strong> Everything configurable via HTML!</li>
+      <li>
+        <strong><a href="#browser-support">Works in all modern browsers</a></strong> Chrome, FF 3.6, IE9, Opera, Safari, Android &amp; more.</li>
+    </ul>
+  </section>
+  <section id="examples">
+    <h1>Examples</h1>
+
+    <label>Textarea:
+      <textarea placeholder="Type here too" style="height: 34px;"></textarea>
+    </label>
+
+    <label>Input with placeholder:
+      <input placeholder="Type some text" style="width: 123px;">
+    </label>
+
+    <label>Input with intial value:
+      <input value="Some text" style="width: 88px;">
+    </label>
+
+    <label>Select:
+      <select style="width: calc(36px + 2em);">
+        <option>CSS</option>
+        <option>JavaScript</option>
+        <option>HTML</option>
+        <option>SVG</option>
+        <option>WAI-ARIA</option>
+      </select>
+    </label>
+  </section>
+  <section id="usage">
+    <h1>Usage</h1>
+
+    <p>Just include the script anywhere in the page:</p>
+    <pre>
+      <code class="language-markup">&lt;script src="<a href="stretchy.min.js" download="">stretchy.min.js</a>" async&gt;&lt;/script&gt;</code>
+    </pre>
+
+    <p>By default, it applies to all
+      <code>&lt;textarea&gt;</code>s,
+      <code>&lt;select&gt;</code> menus with no
+      <code>size</code> attribute and
+      <code>&lt;input&gt;</code> elements that are text fields (e.g. with no
+      <code>type</code> attribute, or with one equal to
+      <code>text</code>,
+      <code>tel</code>,
+      <code>email</code>,
+      <code>url</code>).</p>
+
+    <p>To limit that set further you can use the
+      <code>data-stretchy-filter</code> attribute, on any element. Note that this means you can use the attribute on the
+      <code>&lt;script&gt;</code> element that calls Stretchy itself, in which case you can also shorten its name to
+      <code>data-filter</code>.</p>
+
+    <p>For example, to restrict it to elements that either have the
+      <code>foo</code> class or are inside another element that does, you could use
+      <code>data-stretchy-filter=".foo, .foo *"</code> on an element or call Stretchy like this:</p>
+
+    <pre>
+      <code class="language-markup">&lt;script src="<a href="stretchy.min.js" download="">stretchy.min.js</a>" data-filter=".foo, .foo *" async&gt;&lt;/script&gt;</code>
+    </pre>
+
+    <p>If you specify the
+      <code>data-stretchy-filter</code> attribute on multiple elements, the last value (in source order) wins.
+      <code>data-filter</code> directly on Stretchy’s
+      <code>&lt;script&gt;</code> element takes priority over any
+      <code>data-stretchy-filter</code> declaration.</p>
+
+    <p>If you want to avoid modifying the markup, you can use JavaScript instead:</p>
+
+    <pre>
+      <code class="language-javascript">Stretchy.selectors.filter = ".foo, .foo *";</code>
+    </pre>
+
+    <p>Note that to prevent Stretchy from being applied to elements that don’t match the selector at all, you would need to run that line before
+      <code>DOMContentLoaded</code> fires.</p>
+  </section>
+  <section id="api">
+    <h1>JavaScript API</h1>
+
+    <p>Stretchy has a spartan API, since in most cases you don’t need to call it at all. Stretchy works via event delegation and detects new elements via mutation observers, so
+      <strong>you do not need to call any API methods for adding new elements</strong> via scripting (e.g. AJAX).</p>
+
+    <p>If needed, these are Stretchy’s API methods:</p>
+
+    <dl>
+      <dt>Stretchy.resize(element)</dt>
+      <dd>Autosize one element based on its content. Note that this does not set up any event listeners, it just calculates and sets the right dimension (width or height, depending on the type of control) once.</dd>
+
+      <dt>Stretchy.resizeAll(elements)</dt>
+      <dd>Apply
+        <code>Stretchy.resize()</code> to a collection of elements, or all Stretchy is set to apply to, if no argument is provided.</dd>
+
+      <dt>Stretchy.resizes()</dt>
+      <dd>Can Stretchy be used on this particular element? (checks if element is in the DOM, if it's of the right type and if it matches the selector filter provided by
+        <code>data-stretchy-selector</code>, if the attribute is set.</dd>
+
+      <dt>Stretchy.active</dt>
+      <dd>Boolean. Set to
+        <code>false</code> to temporarily disable Stretchy.</dd>
+    </dl>
+  </section>
+  <section id="browser-support">
+    <h1>Browser Support Notes</h1>
+
+    <ul>
+      <li>On <a href="http://caniuse.com/#feat=mutationobserver">browsers that do not support mutation observers</a>, you have to manually call
+        <code>Stretchy.resize()</code> on new elements. </li>
+      <li>IE has an issue with
+        <code>&lt;input&gt;</code> elements, due to it misreporting
+        <code>scrollWidth</code>. If this matters to you, you can use <a href="https://github.com/gregwhitworth/scrollWidthPolyfill">this polyfill</a> by Greg Whitworth (under development).</li>
+    </ul>
+  </section>
+  <footer>
+    Made with ♥ by <a href="http://lea.verou.me">Lea Verou</a> • <a href="http://lea.verou.me/2015/07/stretchy-form-element-autosizing-the-way-it-should-be">About</a> • <a href="javascript:(function(script){script.src='https://leaverou.github.io/stretchy/stretchy.min.js';document.body.appendChild(script);})(document.createElement('script'))">Use as a bookmarklet!</a>
+
+    <a href="https://github.com/LeaVerou/stretchy" class="github-ribbon">Fork me on GitHub</a>
+
+    <div class="social-media">
+      <iframe id="twitter-widget-0" scrolling="no" frameborder="0" allowtransparency="true" class="twitter-share-button twitter-share-button-rendered twitter-tweet-button" title="Twitter Tweet Button" src="http://platform.twitter.com/widgets/tweet_button.d73d0c4cb6af3df0ea22b7c11dbc87d2.en.html#dnt=false&amp;id=twitter-widget-0&amp;lang=en&amp;original_referer=http%3A%2F%2Fleaverou.github.io%2Fstretchy%2F%23features&amp;size=m&amp;text=Stretchy%3A%20Form%20element%20autosizing%2C%20the%20way%20it%20should%20be.&amp;time=1471154842200&amp;type=share&amp;url=http%3A%2F%2Fleaverou.github.io%2Fstretchy%2F%23features&amp;via=LeaVerou" style="position: static; visibility: visible; width: 61px; height: 20px;"></iframe>
+      <script id="twitter-wjs" src="http://platform.twitter.com/widgets.js"></script>
+      <script>
+        ! function(d, s, id) {
+          var js, fjs = d.getElementsByTagName(s)[0],
+            p = /^http:/.test(d.location) ? 'http' : 'https';
+          if (!d.getElementById(id)) {
+            js = d.createElement(s);
+            js.id = id;
+            js.src = p + '://platform.twitter.com/widgets.js';
+            fjs.parentNode.insertBefore(js, fjs);
+          }
+        }(document, 'script', 'twitter-wjs');
+      </script>
+
+      <iframe src="https://ghbtns.com/github-btn.html?user=leaverou&amp;repo=stretchy&amp;type=watch&amp;count=true" allowtransparency="true" frameborder="0" scrolling="0" width="97" height="20"></iframe>
+      <iframe style="vertical-align: middle" src="https://ghbtns.com/github-btn.html?user=leaverou&amp;repo=stretchy&amp;type=fork&amp;count=true" allowtransparency="true" frameborder="0" scrolling="0" width="95" height="20"></iframe>
+    </div>
+  </footer>
+</body>
+</html>
